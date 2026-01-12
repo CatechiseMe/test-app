@@ -127,6 +127,33 @@ document.addEventListener("DOMContentLoaded", () => {
       .addEventListener("click", renderContentView);
   }
 
+  function renderPdfView(url, title = "PDF Document") {
+  const appContainer = document.getElementById("app-container");
+  
+  appContainer.innerHTML = `
+    <div class="view active">
+      <button class="back-button">Back to Resources</button>
+      <div style="margin-top:1rem;">
+        <iframe src="${url}" style="width:100%; height:70vh;" frameborder="0"></iframe>
+      </div>
+      <button class="print-btn" style="margin-top:0.5rem;">
+        Print PDF
+      </button>
+    </div>
+  `;
+
+  // Back button
+  document.querySelector(".back-button").addEventListener("click", () => {
+    renderResourcesView();
+  });
+
+  // Print button
+  document.querySelector(".print-btn").addEventListener("click", () => {
+    const iframe = document.querySelector("iframe");
+    if (iframe) iframe.contentWindow.print();
+  });
+}
+
   function renderResourcesView() {
     const grouped = resources.reduce((acc, r) => {
       acc[r.category] ??= [];
@@ -163,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
     appContainer.innerHTML = html;
     document.querySelectorAll('.print-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    window.open(btn.dataset.url, '_blank');
+    renderPdfView(btn.dataset.url);
   });
 });
   }
